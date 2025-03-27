@@ -1,0 +1,44 @@
+{
+  "id": "4701339",
+  "name": "myIcon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "16471934",
+      "name": "system-phonebook",
+      "font_class": "system-phonebook",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "16618588",
+      "name": "pepole",
+      "font_class": "pepole",
+      "unicode": "e6b5",
+      "unicode_decimal": 59061
+    },
+    {
+      "icon_id": "16618732",
+      "name": "lock",
+      "font_class": "lock",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "16619122",
+      "name": "mail",
+      "font_class": "mail",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    },
+    {
+      "icon_id": "29923",
+      "name": "appreciate",
+      "font_class": "appreciate",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    }
+  ]
+}
