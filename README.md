@@ -1,5 +1,6 @@
 # test
 
+yes
 
 > A Vue.js project
 
