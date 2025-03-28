@@ -2,6 +2,8 @@
 
 yes
 
+yes
+
 > A Vue.js project
 
 ## Build Setup
