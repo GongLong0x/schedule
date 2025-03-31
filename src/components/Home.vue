@@ -1,7 +1,7 @@
 <template>
     <div class="Home">
       <!-- banner area -->
-      <div id="banner" class="banner">
+      <div id="banner" class="banner" style="font-size: 30px;text-align: center;">
             zhangjiaming shi 大 SB
       </div>
       <!-- navigate area -->
@@ -148,76 +148,6 @@
                             </div>
                             <div></div>
                             <div class="schedule-list-other"></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class="selected not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class="selected not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class=" not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class=" not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class="selected not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class="selected not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="months" id="months-1">
-                        <div class="big-calendar-day">
-                            <div class="day-header">
-                                <div class="big-calendar-day-num"><span class="selected not-month normal">23</span></div>
-                                <div class="big-calendar-day-lunar">廿六</div>
-                            </div>
-                            <div></div>
-                            <div></div>
                         </div>
                     </div>
                     <div class="months" id="months-1">
@@ -751,7 +681,7 @@
     .calendar-month-body
     .months{
         width: 14.28%;
-        height: 10vh;
+        height: 11.6vh;
     }
     .big-calendar .months{
         box-sizing: border-box;
