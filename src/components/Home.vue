@@ -1,11 +1,7 @@
 <template>
     <div class="Home">
-      <!-- banner area -->
-      <div id="banner" class="banner" style="font-size: 30px;text-align: center;">
-            zhangjiaming shi 大 SB
-      </div>
       <!-- navigate area -->
-      <div id="shortcut">
+      <div class="shortcut">
         <div class="navigation">
             <ul class="fr">
                 <li class="shortcut_btn">
@@ -25,34 +21,34 @@
                         <a href="">我的订单</a>
                     </div>
                 </li>
-                <li class="spacer"></li>
-                <li class="shortcut_btn">
+            </ul>
+            <ul>
+                <li class="" style="float: right;">
                     <div class="dt">
-                        <a href="">我的订单</a>
+                        <i class="icon  icon-bianzubeifen"></i>
+                        <a href="#">登录</a>
                     </div>
                 </li>
             </ul>
         </div>
       </div>
       <!-- simple month zone -->
-       <div class="simple-month-zone">
-        <div class="big-calendar simple-month">
+      <div class="month-zone">
+        <!-- <img src="../assets/Banner.png" alt="zhangjiaming shi 大 SB"> -->
+        <div class="sideBar_sideBarBox_Ivm66">
+        </div>
+        <div class="simple-month-zone">
+            <div class="big-calendar simple-month">
             <div class="big-calendar-header">
                 <div class="big-calendar-header-left">
                     <div class="calendar-month-header">
                         <div class="big-calendar-header-month">
-                            2025
-                            <!--  -->
-                            年
-                            <!--  -->
-                            3
-                            <!--  -->
-                            月
+                            2025年3月
                         </div>
                         <div class="calendar-month-header-zone">
                             <div>
                                 <div class="calendar-month-header-btn left-btn">
-                                    <i class="iconfont icon-appreciate"></i>
+                                    <i class="iconfont icon-left"></i>
                                 </div>
                             </div>
                             <div>
@@ -62,7 +58,7 @@
                             </div>
                             <div>
                                 <div class="calendar-month-header-btn right-btn">
-                                    <i class="iconfont icon-appreciate"></i>
+                                    <i class="iconfont icon-right"></i>
                                 </div>
                             </div>
                         </div>
@@ -502,9 +498,9 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-       </div>
-
+      </div>
 
     </div>
   </template>
@@ -531,7 +527,7 @@
         unicode-bidi: isolate;
     }
     .Home{
-        height: 95vh;
+        height: 98vh;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -544,19 +540,19 @@
         -webkit-text-stroke-width: 0.2px;
         -moz-osx-font-smoothing: grayscale;
     }
-    .banner{
-        background-color: red;
-        height: 18vh;
+
+    .shortcut{
+        background-color: #f5f5f5;
+        color: #777;
+        height: 30px;
+        line-height: 27px;
+        width: 100%;
+        margin-bottom: 10px;
     }
-    #shortcut{
-        height: 7vh;
+    .navigation{
+        width: 100%;
     }
-    #shortcut .navigation{
-        height: 36px;
-        line-height: 36px;
-        color: #505259;
-    }
-    #shortcut .dt{
+    .shortcut .dt{
         line-height: 36px;
         padding: 0px 8px;
         height: 36px;
@@ -576,12 +572,13 @@
         margin-left: 20px;
     }
     .fr{
-        float: right;
-    }
-    #shortcut li{
+        margin-left: 20%;
         float: left;
     }
-    #shortcut li.spacer{
+    .shortcut li{
+        float: left;
+    }
+    .shortcut li.spacer{
         overflow: hidden;
         margin: 14px 8px 0;
         width: .5px;
@@ -592,6 +589,7 @@
     /* calendar */
     .simple-month-zone{
         flex: 1;
+        height: 100%;
     }
     .big-calendar-header{
         display: flex;
@@ -681,7 +679,7 @@
     .calendar-month-body
     .months{
         width: 14.28%;
-        height: 11.6vh;
+        height: 13.5vh;
     }
     .big-calendar .months{
         box-sizing: border-box;
@@ -737,6 +735,26 @@
     }
     .schedule-list-other{
         flex: 1;
+    }
+    /* 左侧区域 */
+    .month-zone{
+        display: flex;
+        height: 90%;
+    }
+    .sideBar_sideBarBox_Ivm66 {
+        width: 20%;
+        height: 93vh; /* 确保父级有高度 */
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0; /* 防止被压缩 */
+        background-image: url(../assets/witch.jpg);
+        background-size: contain; /* 替换 contain 避免留白 */
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-color: #f7f8fb;
+        background-blend-mode: darken;
     }
   </style>
   
