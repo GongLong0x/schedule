@@ -43,7 +43,6 @@
 
 <script>
 import request from '@/utils/request';
-import { RouterLink } from 'vue-router';
 
 export default {
   data() {

@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login.vue'
 import Register from '@/components/Register.vue'
 import Home from '@/components/Home.vue'
+import ToDoList from '@/components/ToDoList.vue'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/Register',
       name: 'Register',
       component: Register  
+    },
+    {
+      path: '/ToDoList',
+      name: 'ToDoList',
+      component: ToDoList
     }
   ]
 })
