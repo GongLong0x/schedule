@@ -104,6 +104,7 @@ export default {
 }
 
 .div_header{
+  text-align: center;
   width: 100%;
   height: 100px;
   border-bottom: 1px,solid,#d3d3d3;
