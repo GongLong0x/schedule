@@ -118,6 +118,7 @@
                 
                 // 2. 存储 token 到本地存储
                 localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('authName',this.username);
                 
                 /* // 3. 设置 axios 默认授权头
                 //this.$axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;

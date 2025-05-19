@@ -112,7 +112,7 @@
                 <div class="big-calendar-day">
                   <div class="day-header">
                     <div class="big-calendar-day-num">
-                      <span :class="{
+                      <span style="width: 40px;" :class="{
                         'selected': day.isToday || day.isSelected,
                         'not-month': !day.isCurrentMonth,
                         'normal': true
@@ -325,7 +325,9 @@ export default {
     },
     
     getEventsForDate(dateStr) {
-      return this.events.filter(event => event.date === dateStr);
+      dateStr=dateStr;
+      return null;
+      /* return this.events.filter(event => event.date === dateStr); */
     },
     
     isSelectedDate(year, month, day) {
@@ -547,6 +549,7 @@ ul {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background-image: url(../assets/calendar_bgi.png);
 }
 .calendar-month .calendar-month-week {
     display: flex;
@@ -585,23 +588,26 @@ ul {
     height: 100%;
 }
 .big-calendar-day .day-header {
-    display: flex;
+    /*display: flex;*/
     justify-content: space-between;
     align-items: center;
     padding: 2px 8px 2px 2px;
     overflow: hidden;
 }
 .big-calendar-day-num {
+    margin-top: 20px;
     color: #1f2233;
-    font-size: 18px;
-    height: 26px;
-    line-height: 26px;
-    display: flex;
-    align-items: center;
+    font-size: 30px;
+    height: 40px;
+    line-height: 40px;
+    /* display: flex; */
+    text-align: center;
 }
 .big-calendar-day-lunar {
     color: #999da8;
-    font-size: 12px;
+    font-size: 15px;
+    text-align: center;
+    margin-top: 10px;
 }
 .big-calendar-day-num .normal {
     font-family: DIN-Medium;

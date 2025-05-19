@@ -24,6 +24,7 @@ export default new Vuex.Store({
         const response = await axios.post('/api/auth/login', credentials)
         commit('SET_USER', response.data.user)
         localStorage.setItem('authToken', response.data.token)
+        localStorage.setItem('authName', response.data.user.username)
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
       } catch (error) {
         throw error.response.data.message || '登录失败'
@@ -35,15 +36,17 @@ export default new Vuex.Store({
       } finally {
         commit('CLEAR_USER')
         localStorage.removeItem('authToken')
+        localStorage.removeItem('authName')
         delete axios.defaults.headers.common['Authorization']
       }
     },
     checkAuth({ commit }) {
       // 检查本地是否有token来恢复登录状态
       const token = localStorage.getItem('authToken')
+      const username = localStorage.getItem('authName')
       if (token) {
         commit('SET_USER', {
-          username: '已登录用户',
+          username: username,
           token: token
         })
       }
