@@ -155,7 +155,7 @@ export default {
       navItems: [
         { text: '首页', route: '/' },
         { text: '待办清单', route: '/ToDoList' },
-        { text: '我的订单', route: '/SubEvent' }
+        { text: '添加待办', route: '/SubEvent' }
       ],
       weekDays: ['日', '一', '二', '三', '四', '五', '六'],
       weekDaysFull: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
@@ -173,8 +173,8 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoggedIn: state => state.auth.isAuthenticated,
-      username: state => state.auth.user?.username || '用户'
+      isLoggedIn: state => state.isAuthenticated,
+      username: state => state.user?.username || '用户'
     }),
     miniCalendarDays() {
       return this.generateCalendarDays(true);
@@ -348,8 +348,14 @@ export default {
         this.currentMonth = day.month;
       }
       
-      console.log('Selected date:', this.selectedDate);
+      //console.log('Selected date:', this.selectedDate);
       // 这里可以添加处理选择日期的逻辑，比如显示事件详情等
+      this.$router.push({
+        path:'/ToDoList',
+        query:{
+          date: `${day.year}-${day.month+1}-${this.pad(day.date)}`
+        }
+      })
     },
     
     prevMonth() {
@@ -704,5 +710,10 @@ cursor: pointer;
 .term-day {
 color: #ff4757;
 font-weight: bold;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
 }
 </style>

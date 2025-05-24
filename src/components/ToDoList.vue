@@ -1,31 +1,31 @@
 <template>
     <div class="to-do-list">
+        <!-- 导航区域 -->
         <div class="shortcut">
             <div class="navigation">
                 <ul class="fr">
-                    <li class="shortcut_btn">
+                    <li class="shortcut_btn" v-for="(nav, index) in navItems" :key="index">
                         <div class="dt">
-                            <span> <router-link to="/">首页</router-link> </span>
+                            <span v-if="nav.route"><router-link :to="nav.route">{{ nav.text }}</router-link></span>
+                            <a v-else href="">{{ nav.text }}</a>
                         </div>
-                    </li>
-                    <li class="spacer"></li>
-                    <li class="shortcut_btn">
-                        <div class="dt">
-                            <span> <router-link to="/ToDoList">待办清单</router-link> </span>
-                        </div>
-                    </li>
-                    <li class="spacer"></li>
-                    <li class="shortcut_btn">
-                        <div class="dt">
-                            <a href="">我的订单</a>
-                        </div>
+                        <div class="spacer" v-if="index < navItems.length - 1"></div>
                     </li>
                 </ul>
                 <ul class="fl">
                     <li class="" style="float: right;">
                         <div class="dt">
-                            <i class="icon  icon-bianzubeifen"></i>
-                            <span> <router-link to="/Login">登录</router-link> </span>
+                            <i class="icon icon-bianzubeifen"></i>
+                            <span v-if="!isLoggedIn"><router-link to="/Login">登录</router-link></span>
+                            <el-dropdown v-else>
+                                <span class="el-dropdown-link">
+                                    {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>个人中心</el-dropdown-item>
+                                    <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
                     </li>
                 </ul>
@@ -38,13 +38,15 @@
 
             <div class="right-area">
                 <div class="container">
-                    <h1 class="todo-list-head">我的待办清单</h1>
-                    <div class="input-container">
+                    <h1 class="todo-list-head">我的待办清单-{{ new Date(selectDate).toLocaleDateString() }}</h1>
+                    
+<!--                     <div class="input-container">
                         <input type="text" id="task-input" placeholder="添加新任务..." autofocus v-model="newTask">
                         <button id="add-btn" @click="addTask">
                             <i class="icon icon-tianjiajiahaowubiankuang icon-add"></i>
                         </button>
-                    </div>
+                    </div> -->
+
                     <ul id="task-list">
                         <li v-for="(task, index) in tasks" :key="index">
                             <input 
@@ -54,61 +56,136 @@
                                 @change="saveTasks"
                             >
                             <span class="task-text" :class="{ completed: task.completed }">
-                                {{ task.text }}
+                                {{ task.title }}
                             </span>
                             <button class="delete-btn" @click="removeTask(index)">删除</button>
                         </li>
+                        <li v-if="tasks.length==0" class="no-tasks">
+                            暂无当日日程安排
+                        </li>
                     </ul>
                 </div>
+
                 <div class="detail-container">
                 </div>
             </div>
         </div>
-
     </div>
-  </template>
-  
+</template>
+
 <script>
-  export default {
+import request from '../utils/request.js';
+import { mapState } from 'vuex';
+import { Dropdown, DropdownMenu, DropdownItem } from 'element-ui';
+
+export default {
     name: 'ToDoList',
+    components: {
+        [Dropdown.name]: Dropdown,
+        [DropdownMenu.name]: DropdownMenu,
+        [DropdownItem.name]: DropdownItem
+    },
     data() {
-      return {
-        tasks: [],
-        newTask: ''
-      }
+        return {
+            navItems: [
+                { text: '首页', route: '/' },
+                { text: '待办清单', route: '/ToDoList' },
+                { text: '添加待办', route: '/SubEvent' }
+            ],
+            tasks: [],
+            newTask: '',
+            selectDate: new Date().toISOString().split('T')[0], // 默认今天
+            currentPage: 1 // 当前页码
+        }
+    },
+    computed:{
+        ...mapState({
+            isLoggedIn: state => state.isAuthenticated,
+            username: state => state.user?.username || '用户'
+        })
     },
     mounted() {
-      this.loadTasks();
+        if(this.$route.query.date){
+            this.selectDate = this.$route.query.date;
+        }
+        this.loadTasks();
     },
     methods: {
-      addTask:function() {
-        if (this.newTask.trim() === '') return;
-        this.tasks.push({
-          text: this.newTask.trim(),
-          completed: false
-        });
-        this.newTask = '';
-        this.saveTasks();
-      },
-      removeTask(index) {
-        this.tasks.splice(index, 1);
-        this.saveTasks();
-      },
-      saveTasks() {
-        localStorage.setItem('tasks', JSON.stringify(this.tasks));
-      },
-      loadTasks() {
-        const savedTasks = localStorage.getItem('tasks');
-        if (savedTasks) {
-          this.tasks = JSON.parse(savedTasks);
+        async logout() {
+            await this.$store.dispatch('logout')
+            this.$router.push('/login')
+        },
+        addTask() {
+            if (this.newTask.trim() === '') return;
+            this.tasks.push({
+                text: this.newTask.trim(),
+                completed: false,
+                date: this.selectDate 
+            });
+            this.newTask = '';
+            this.saveTasks();
+        },
+        async removeTask(index) {
+            const taskToRemove = this.tasks[index];
+            const taskId = taskToRemove.id;
+            alert(taskId);
+            try {
+                // 发送删除请求到后端
+                const response = await request.delete(`/api/schedule/deleteSchedule/${taskId}`);
+                alert(response.data.message);
+                if (response.data.code=="0") {
+                    // 后端删除成功，从前端数组中移除该任务
+                    this.tasks.splice(index, 1);
+                    this.saveTasks();
+                } else {
+                    // 后端返回错误状态码，给出提示
+                    alert('删除任务失败，请稍后重试');
+                }
+            } catch (error) {
+                // 请求出错，给出提示
+                console.error('删除任务时发生错误:', error);
+                alert('删除任务时发生错误，请稍后重试');
+            }
+            //this.tasks.splice(index, 1);
+            //this.saveTasks();
+        },
+        saveTasks() {
+            try {
+                localStorage.setItem('tasks', JSON.stringify(this.tasks));
+            } catch (error) {
+                console.error('保存任务到本地存储时出错:', error);
+            }
+        },
+        async loadTasks() {
+            try {
+                const response = await request.get('/api/schedule/searchSchedule', {
+                    params: {
+                        size: 8,
+                        current: this.currentPage,
+                        startTime: this.selectDate,
+                        endTime: '',
+                        keyword:''
+                    }
+                });
+                //alert(response.data.data.records);
+                if (response.data.code === '0' && response.data.success) {
+                    // 假设接口返回的数据结构中有一个名为 list 的数组包含日程信息
+                    this.tasks = response.data.data.records || [];
+                    //alert(tasks);
+                } else {
+                    console.error(response.data.message);
+                }
+            } catch (error) {
+                console.error('请求出错:', error);
+            }
         }
-      }
     }
-  }
+}
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    /* 原有的 CSS 代码保持不变 */
     *{
         margin: 0;
         padding: 0;
@@ -151,6 +228,7 @@
     }
 
     .shortcut .dt{
+        display: flex;
         line-height: 36px;
         padding: 0px 8px;
         height: 36px;
@@ -342,5 +420,16 @@
         line-height: 32px;
         margin: 0 0 12px 0;
     }
+
+    .no-tasks {
+        text-align: center;
+        color: #888;
+        font-style: italic;
+        border-left: none !important;
+        justify-content: center !important;
+    }
+    .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+    }
 </style>
-  

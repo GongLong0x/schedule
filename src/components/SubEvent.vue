@@ -31,6 +31,8 @@
         </ul>
       </div>
     </div>
+
+
     <div class="home-body">
       <!-- 添加日程表单 -->
       <div class="form-container">
@@ -44,35 +46,35 @@
               <option value="3">生活</option>
             </select>
           </div>
-          
+
           <div class="form-group">
             <label for="title">日程主题</label>
             <input type="text" id="title" v-model="formData.title" required>
           </div>
-          
+
           <div class="form-group">
             <label for="startTime">开始时间</label>
             <input type="datetime-local" id="startTime" v-model="formData.startTime" required step="60">
           </div>
-          
+
           <div class="form-group">
             <label for="endTime">结束时间</label>
             <input type="datetime-local" id="endTime" v-model="formData.endTime" required step="60">
           </div>
-          
+
           <div class="form-group">
             <label for="remindTime">提醒时间</label>
             <input type="datetime-local" id="remindTime" v-model="formData.remindTime" required step="60">
           </div>
-          
+
           <div class="form-group">
             <label for="description">日程描述</label>
             <textarea id="description" v-model="formData.description" rows="4" required></textarea>
           </div>
-          
+
           <button type="submit">提交</button>
           <button type="button" @click="resetForm">重置</button>
-          
+
           <div v-if="message" :class="messageClass">{{ message }}</div>
         </form>
       </div>
@@ -81,88 +83,103 @@
 </template>
 
 <script>
-  export default {
-    name: 'Home',
-    data() {
-      return {
-        navItems: [
-          { text: '首页', route: '/' },
-          { text: '待办清单', route: '/ToDoList' },
-          { text: '我的订单', route: '/SubEvent' }
-        ],
-        formData: {
-          categoryId: '1',
-          title: '',
-          startTime: '',
-          endTime: '',
-          remindTime: '',
-          description: ''
-        },
-        message: '',
-        messageClass: '',
-        isLoggedIn: false,
-        username: ''
+import request from '../utils/request.js';
+
+import { RouterLink } from 'vue-router';
+import { mapState } from 'vuex';
+import { Dropdown, DropdownMenu, DropdownItem } from 'element-ui';
+
+export default {
+  name: 'SubEvent',
+  components: {
+    [Dropdown.name]: Dropdown,
+    [DropdownMenu.name]: DropdownMenu,
+    [DropdownItem.name]: DropdownItem
+  },
+  data() {
+    return {
+      navItems: [
+        { text: '首页', route: '/' },
+        { text: '待办清单', route: '/ToDoList' },
+        { text: '添加待办', route: '/SubEvent' }
+      ],
+      formData: {
+        categoryId: '1',
+        title: '',
+        startTime: '',
+        endTime: '',
+        remindTime: '',
+        description: ''
+      },
+      message: '',
+      messageClass: '',
+    };
+  },
+  computed:{
+    ...mapState({
+      isLoggedIn: state => state.isAuthenticated,
+      username: state => state.user?.username || '用户'
+    }),
+  },
+  methods: {
+    submitSchedule() {
+      // 验证提醒时间不能小于当前时间
+      const now = new Date();
+      const remindTime = new Date(this.formData.remindTime);
+      if (remindTime < now) {
+        this.message = '提醒时间不能小于当前日期';
+        this.messageClass = 'error';
+        return;
+      }
+      // 格式化时间，确保秒数为0
+      const formatTime = (timeStr) => {
+        if (!timeStr) return '';
+        const date = new Date(timeStr);
+        date.setSeconds(0);
+        return date.toISOString().replace('T', ' ').substring(0, 19);
+      };
+      const payload = {
+        ...this.formData,
+        categoryId: parseInt(this.formData.categoryId), // 确保 categoryId 为整数
+        startTime: formatTime(this.formData.startTime),
+        endTime: formatTime(this.formData.endTime),
+        remindTime: formatTime(this.formData.remindTime)
+      };
+
+      // 发送请求
+      request.post('/api/schedule/addSchedule', payload)
+        .then(response => {
+          if (response.data.code === '0') {
+            this.message = '日程添加成功';
+            this.messageClass = 'success';
+            this.resetForm();
+          } else {
+            this.message = response.data.message || '添加日程失败';
+            this.messageClass = 'error';
+          }
+        })
+        .catch(error => {
+          this.message = '请求失败: ' + error.message;
+          this.messageClass = 'error';
+        });
+    },
+    resetForm() {
+      this.formData = {
+        categoryId: '1',
+        title: '',
+        startTime: '',
+        endTime: '',
+        remindTime: '',
+        description: ''
       };
     },
-    methods: {
-      submitSchedule() {
-        // 使用 this.$router 代替 useRouter()
-        // 其他方法内容保持不变
-        // 验证提醒时间不能小于当前时间
-        const now = new Date();
-        const remindTime = new Date(formData.value.remindTime);
-        if (remindTime < now) {
-          message.value = '提醒时间不能小于当前日期';
-          messageClass.value = 'error';
-          return;
-        }
-        // 格式化时间，确保秒数为0
-        const formatTime = (timeStr) => {
-          if (!timeStr) return '';
-          const date = new Date(timeStr);
-          date.setSeconds(0);
-          return date.toISOString().replace('T', ' ').substring(0, 19);
-        };
-        const payload = {
-          ...formData.value,
-          startTime: formatTime(formData.value.startTime),
-          endTime: formatTime(formData.value.endTime),
-          remindTime: formatTime(formData.value.remindTime)
-        };
-        request.post('/api/schedule/addSchedule', payload)
-          .then(response => {
-            if (response.data.code === '0') {
-              message.value = '日程添加成功';
-              messageClass.value = 'success';
-              resetForm();
-            } else {
-              message.value = response.data.message || '添加日程失败';
-              messageClass.value = 'error';
-            }
-          })
-          .catch(error => {
-            message.value = '请求失败: ' + error.message;
-            messageClass.value = 'error';
-          });
-      },
-      resetForm() {
-        this.formData = {
-          categoryId: '1',
-          title: '',
-          startTime: '',
-          endTime: '',
-          remindTime: '',
-          description: ''
-        };
-      },
-      logout() {
-        this.isLoggedIn = false;
-        this.username = '';
-      }
-    }
-  };
+    async logout() {
+      await this.$store.dispatch('logout')
+      this.$router.push('/login')
+    },
+  }
+};
 </script>
-
 
 <style scoped>
 * {
@@ -198,6 +215,7 @@ div {
     height: 100%;
 }
 .shortcut .dt {
+  display: flex;
     line-height: 36px;
     padding: 0px 8px;
     height: 36px;
@@ -241,6 +259,7 @@ ul {
   font-family: Arial, sans-serif;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 25px;
   padding: 20px;
 }
 .form-container {

@@ -113,19 +113,20 @@
                 // 1. 提交 mutation 更新登录状态
                  this.$store.commit('SET_USER', {
                   username: this.username,
-                  token: response.data.token // 假设返回中有token
+                  token: response.data.data.token // 假设返回中有token
                 });
                 
                 // 2. 存储 token 到本地存储
-                localStorage.setItem('authToken', response.data.token);
+                localStorage.setItem('authToken', response.data.data.token);
+                
                 localStorage.setItem('authName',this.username);
                 
-                /* // 3. 设置 axios 默认授权头
-                //this.$axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+                 // 3. 设置 axios 默认授权头
+                 request.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.token}`;
                 
                 // 4. 显示成功提示（使用 Element UI）
-                this.$message.success('登录成功！');
-                */
+                //this.$message.success('登录成功！');
+                
                 // 5. 跳转到首页或重定向页面
                 const redirectPath = this.$route.query.redirect || '/';
                 this.$router.push(redirectPath); 
